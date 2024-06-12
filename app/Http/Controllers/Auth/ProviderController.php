@@ -28,7 +28,7 @@ class ProviderController extends Controller
 
     public function callback($provider)
     {
-        $socialUser = Socialite::driver($provider)->user();
+        $socialUser = Socialite::driver($provider)->stateless()->user();
 
         $authuser = $this->store($socialUser, $provider);
 
@@ -48,7 +48,9 @@ class ProviderController extends Controller
                 $user = User::updateOrCreate([
                     'name' => $socialUser->getName() ? $socialUser->getName() : $socialUser->getNicname(),
                     'email' => $socialUser->getEmail(),
-                    'password' => Hash::make('admin'),  
+                    'password' => Hash::make('admin'),
+                    'phone' => null,
+                    'avatar' => $socialUser->getAvatar(),
                 ]);
             }
 
@@ -63,6 +65,4 @@ class ProviderController extends Controller
         }
         return $socialAccount->user;
     }
-
-
 }
