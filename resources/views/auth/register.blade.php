@@ -161,7 +161,7 @@
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control" id="password_confirmation"
-                                    name="password_confirmation" placeholder="Password" required autocomplete="new-password">
+                                    name="password_confirmation" placeholder="Password Confirmation" required autocomplete="new-password">
                             </div>
                             <button type="submit" class="btn btn-success btn-block w-100">Berikutnya</button>
                             <hr>
