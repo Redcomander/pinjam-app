@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.1/mdb.min.css" rel="stylesheet" />
     <style>
         .back-color {
             background: linear-gradient(to right, #09eb5c, #38d780);
@@ -39,9 +40,12 @@
         .img-fit {
             object-fit: cover;
             width: 25px;
-            /* Set the width to the desired size */
             height: 25px;
-            /* Set the height to the desired size */
+        }
+
+        .no-pointer {
+            cursor: text;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -58,15 +62,32 @@
                     @endguest
                 </div>
                 <div class="right-links d-flex align-items-center">
-                    <a href="#" class="text-white me-2">Ikuti kami di</a>
+                    <a class="text-white me-2 no-pointer">Ikuti kami di</a>
                     <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
                     <a href="#" class="text-white me-2"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="text-white me-2"><i class="bi bi-twitter"></i></a>
                     @auth
-                        <div class="d-flex align-items-center me-3">
-                            <img src="{{ Auth::user()->avatar }}" alt="Avatar" height="25"
-                                class="rounded-circle img-fit" loading="lazy">
-                            <span class="text-white ms-2">{{ Auth::user()->name }}</span>
+                        <!-- Dropdown section -->
+                        <div class="dropdown">
+                            <div class="dropdown-toggle d-flex align-items-center text-white me-3" id="userDropdownMenu"
+                                data-mdb-toggle="dropdown" aria-expanded="false">
+                                <img src="{{ Auth::user()->avatar }}" alt="Avatar" height="25"
+                                    class="rounded-circle img-fit me-1" loading="lazy">
+                                <span class="text-white">{{ Auth::user()->name }}</span>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenu">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     @endauth
                 </div>
@@ -91,7 +112,7 @@
         </div>
         <div class="nav-links back-color py-2 fs-6">
             <div class="container mt d-flex justify-content-between flex-wrap">
-                <a href="#" class="text-white ">HP Gratis 0 Rupiah iPhone</a>
+                <a href="#" class="text-white">HP Gratis 0 Rupiah iPhone</a>
                 <a href="#" class="text-white">Rp 1 Rupiah Sepatu</a>
                 <a href="#" class="text-white">Baju Kaos Pria Distro Original 100%</a>
                 <a href="#" class="text-white">Set Titanium</a>
@@ -107,9 +128,21 @@
             @yield('content')
         </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+
+    <!-- MDB script and initialization -->
+    <script>
+        import {
+            Dropdown,
+            Collapse,
+            initMDB
+        } from "mdb-ui-kit";
+
+        initMDB({
+            Dropdown,
+            Collapse
+        });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.1/mdb.umd.min.js"></script>
 </body>
 
 </html>

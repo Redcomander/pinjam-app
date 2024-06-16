@@ -68,7 +68,7 @@
             margin-bottom: 15px;
         }
 
-        .social-login-buttons button {
+        .social-login-buttons a {
             width: 48%;
         }
 
@@ -146,28 +146,37 @@
                         </div>
                         <form class="login-form">
                             <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Nama" name="name" id="name" placeholder="Nama Lengkap">
+                                <input type="text" class="form-control" placeholder="Nama" name="name"
+                                    id="name" placeholder="Nama Lengkap">
+                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
                             </div>
                             <div class="mb-3">
-                                <input type="tel" name="phone" id="phone" class="form-control" placeholder="No. Handphone">
+                                <input type="tel" name="phone" id="phone" class="form-control"
+                                    placeholder="No. Handphone">
                             </div>
                             <div class="mb-3">
-                                <input type="email" class="form-control" name="email"
-                                    id="email" placeholder="Email">
+                                <input type="email" class="form-control" name="email" id="email"
+                                    placeholder="Email">
+                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control" name="password"
-                                    id="password" placeholder="Password" required autocomplete="new-password">
+                                <input type="password" class="form-control" name="password" id="password"
+                                    placeholder="Password" required autocomplete="new-password">
+                                <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control" id="password_confirmation"
-                                    name="password_confirmation" placeholder="Password Confirmation" required autocomplete="new-password">
+                                    name="password_confirmation" placeholder="Password Confirmation" required
+                                    autocomplete="new-password">
+                                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
                             <button type="submit" class="btn btn-success btn-block w-100">Berikutnya</button>
                             <hr>
                             <div class="social-login-buttons">
-                                <button type="button" class="btn btn-primary"><i class="bi bi-facebook"></i></button>
-                                <button type="button" class="btn btn-danger"><i class="bi bi-google"></i></button>
+                                <a href="{{ route('login.redirect', 'facebook') }}" class="btn btn-primary"><i
+                                        class="bi bi-facebook"></i></a>
+                                <a href="{{ route('login.redirect', 'google') }}" class="btn btn-danger"><i
+                                        class="bi bi-google"></i></a>
                             </div>
                             <div class="term">
                                 Dengan mendaftar, Anda setuju dengan Syarat,

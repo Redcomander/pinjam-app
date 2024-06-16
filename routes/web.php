@@ -3,8 +3,12 @@
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\FirstLoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Telescope\Http\Middleware\Authorize as MiddlewareAuthorize;
+use Laravel\Telescope\Telescope;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +40,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect'])->name('login.redirect');
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback'])->name('login.callback');
 
-require __DIR__.'/auth.php';
+Route::resource('profil', UserController::class);
+
+Route::get('/changepassword', [UserController::class, 'changePassword'])->name('changepassword');
+
+
+require __DIR__ . '/auth.php';

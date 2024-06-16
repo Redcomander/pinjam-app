@@ -2,4 +2,5 @@
 <title>Beranda</title>
 @section('content')
 
+
 @endsection
