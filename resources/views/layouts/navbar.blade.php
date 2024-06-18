@@ -47,6 +47,44 @@
             cursor: text;
             pointer-events: none;
         }
+
+        /* Mobile View */
+        @media (max-width: 768px) {
+            .header .container {
+                padding: 0 15px;
+            }
+
+            .header .right-links {
+                margin-right: 10%;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .header .right-icons {
+                margin-top: 10px;
+            }
+
+            .header .main-bar .logo {
+                justify-content: center;
+                margin-left: 30%;
+            }
+
+            .header .main-bar .search-bar {
+                flex-grow: 1;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .header .main-bar .right-icons {
+                margin-left: 20%;
+                margin-right: 0;
+            }
+
+            .header .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -61,16 +99,16 @@
                         <a href="{{ route('login') }}" class="text-white me-3">Log In</a>
                     @endguest
                 </div>
-                <div class="right-links d-flex align-items-center">
-                    <a class="text-white me-2 no-pointer">Ikuti kami di</a>
-                    <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-white me-2"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-white me-2"><i class="bi bi-twitter"></i></a>
+                <div class="right-links d-lg-flex align-items-center">
+                    <a class="text-white me-2 no-pointer d-none d-sm-flex">Ikuti kami di</a>
+                    <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-twitter"></i></a>
                     @auth
                         <!-- Dropdown section -->
                         <div class="dropdown">
-                            <div class="dropdown-toggle d-flex align-items-center text-white me-3" id="userDropdownMenu"
-                                data-mdb-toggle="dropdown" aria-expanded="false">
+                            <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                                href="#" id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
                                 @php
                                     $avatarUrl = Auth::user()->avatar;
                                     if (filter_var($avatarUrl, FILTER_VALIDATE_URL)) {
@@ -79,17 +117,17 @@
                                         $avatarSrc = asset('storage/' . $avatarUrl); // Path from public storage
                                     }
                                 @endphp
-                                <img src="{{ $avatarSrc }}" alt="Avatar" height="25" class="rounded-circle img-fit me-1" loading="lazy">
+                                <img src="{{ $avatarSrc }}" class="rounded-circle img-fit me-1" height="25"
+                                    alt="Profile Picture" loading="lazy" />
                                 <span class="text-white">{{ Auth::user()->name }}</span>
-                            </div>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenu">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end text-black"
+                                aria-labelledby="navbarDropdownMenuAvatar">
                                 <li>
-                                    <hr class="dropdown-divider">
+                                    <a class="dropdown-item text-black" href="{{ route('profile.edit') }}">My profile</a>
                                 </li>
                                 <li>
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form action="{{ route('logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item">Logout</button>
                                     </form>
@@ -107,25 +145,19 @@
                 </div>
                 <div class="search-bar flex-grow-1 my-2 my-md-0">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Daftar & Dapat Voucher Gratis">
-                        <button class="btn btn-primary" type="button"><i class="bi bi-search"></i></button>
+                        <input type="text" class="form-control" placeholder="Cari Produk disini">
+                        <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
-                <div class="right-icons ms-4 my-2 my-md-0 d-flex flex-wrap">
-                    <a href="#" class="text-white ms-3"><i class="bi bi-bell me-1"></i>Notifikasi</a>
-                    <a href="#" class="text-white ms-3"><i class="bi bi-question-diamond me-1"></i> Bantuan</a>
+                <div class="right-icons ms-sm-0 my-2 my-md-0 d-flex flex-wrap">
+                    <a href="#" class="text-white ms-3"><i class="fas fa-bell me-1"></i>Notifikasi</a>
+                    <a href="#" class="text-white ms-3"><i class="fas fa-cart-shopping me-1"></i> Keranjang</a>
                 </div>
             </div>
         </div>
         <div class="nav-links back-color py-2 fs-6">
             <div class="container mt d-flex justify-content-between flex-wrap">
-                <a href="#" class="text-white">HP Gratis 0 Rupiah iPhone</a>
-                <a href="#" class="text-white">Rp 1 Rupiah Sepatu</a>
-                <a href="#" class="text-white">Baju Kaos Pria Distro Original 100%</a>
-                <a href="#" class="text-white">Set Titanium</a>
-                <a href="#" class="text-white">Hodie Starboy</a>
-                <a href="#" class="text-white">Kenset Bluetooth</a>
-                <a href="#" class="text-white">Skintific Cushion</a>
+
             </div>
         </div>
     </header>

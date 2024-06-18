@@ -30,6 +30,14 @@
                                     accept="image/*">
                             </div>
                             <div class="mb-3">
+                                @if (session('status') === 'profile-updated')
+                                    <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                                        class="alert alert-success text-sm text-gray-600 dark:text-gray-400 d-flex align-items-center">
+                                        <i class="fas fa-check-circle me-2"></i> {{ __('Saved.') }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     value="{{ old('name', $user->name) }}" required>
@@ -58,11 +66,12 @@
                             <div class="mb-3 text-center">
                                 <button class="btn btn-success" type="submit">Save</button>
                             </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
