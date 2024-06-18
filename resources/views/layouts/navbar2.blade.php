@@ -42,12 +42,13 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container-fluid">
             <!-- Navbar brand (Logo) -->
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="{{ asset('logo2.png') }}" height="30" alt="MDB Logo" loading="lazy" />
             </a>
 
             <!-- Right elements -->
-            <div class="d-flex align-items-center ms-auto"> <!-- 'ms-auto' pushes items to the right -->
+            <div class="d-flex align-items-center ms-auto">
+                <!-- 'ms-auto' pushes items to the right -->
                 <!-- Icon -->
                 <a class="text-reset me-3" href="#">
                     <i class="fas fa-shopping-cart"></i>
@@ -77,8 +78,16 @@
                 <div class="dropdown">
                     <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
                         href="#" id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
-                        <img src="{{ Auth::user()->avatar }}" class="rounded-circle" height="25"
-                            alt="Profile Picture" loading="lazy" />
+                        @php
+                            $avatarUrl = Auth::user()->avatar;
+                            if (filter_var($avatarUrl, FILTER_VALIDATE_URL)) {
+                                $avatarSrc = $avatarUrl; // Full URL from socialite
+                            } else {
+                                $avatarSrc = asset('storage/' . $avatarUrl); // Path from public storage
+                            }
+                        @endphp
+                        <img src="{{ $avatarSrc }}" class="rounded-circle" height="25" alt="Profile Picture"
+                            loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>

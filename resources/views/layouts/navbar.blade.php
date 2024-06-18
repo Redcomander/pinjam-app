@@ -71,8 +71,15 @@
                         <div class="dropdown">
                             <div class="dropdown-toggle d-flex align-items-center text-white me-3" id="userDropdownMenu"
                                 data-mdb-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ Auth::user()->avatar }}" alt="Avatar" height="25"
-                                    class="rounded-circle img-fit me-1" loading="lazy">
+                                @php
+                                    $avatarUrl = Auth::user()->avatar;
+                                    if (filter_var($avatarUrl, FILTER_VALIDATE_URL)) {
+                                        $avatarSrc = $avatarUrl; // Full URL from socialite
+                                    } else {
+                                        $avatarSrc = asset('storage/' . $avatarUrl); // Path from public storage
+                                    }
+                                @endphp
+                                <img src="{{ $avatarSrc }}" alt="Avatar" height="25" class="rounded-circle img-fit me-1" loading="lazy">
                                 <span class="text-white">{{ Auth::user()->name }}</span>
                             </div>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenu">
