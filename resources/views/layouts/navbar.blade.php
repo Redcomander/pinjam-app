@@ -93,7 +93,11 @@
         <div class="top-bar back-color py-1">
             <div class="container d-flex justify-content-between">
                 <div class="left-links d-flex flex-wrap">
-                    <a href="#" class="text-white me-3">Seller Centre</a>
+                    @auth
+                        @if (Auth::user()->seller)
+                            <a href="{{ route('dashboard') }}" class="text-white me-3">Seller Centre</a>
+                        @endif
+                    @endauth
                     @guest
                         <a href="{{ route('register') }}" class="text-white me-3">Daftar</a>
                         <a href="{{ route('login') }}" class="text-white me-3">Log In</a>

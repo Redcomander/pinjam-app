@@ -61,17 +61,25 @@
                                 <a href="{{ route('changepassword') }}" class="btn btn-primary mb-3">Change Password</a>
                             </div>
                             <div class="mb-3 text-center">
-                                <a href="#" class="btn btn-warning mb-3">Become Seller/Lender</a>
+                                @if ($user->seller)
+                                    <a href="{{ route('dashboard') }}" class="btn btn-success mb-3">Seller Center</a>
+                                @else
+                                    <a href="#" class="btn btn-warning mb-3" id="becomeSellerBtn">Become
+                                        Seller/Lender</a>
+                                @endif
                             </div>
                             <div class="mb-3 text-center">
                                 <button class="btn btn-success" type="submit">Save</button>
                             </div>
+                        </form>
+                        <form id="becomeSellerForm" action="{{ route('become-seller') }}" method="POST" class="d-none">
+                            @csrf
+                            @method('PATCH')
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script>
@@ -83,6 +91,13 @@
             if (event.target.files.length > 0) {
                 var src = URL.createObjectURL(event.target.files[0]);
                 document.getElementById('avatarImage').src = src;
+            }
+        });
+
+        document.getElementById('becomeSellerBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to become a seller?')) {
+                document.getElementById('becomeSellerForm').submit();
             }
         });
     </script>

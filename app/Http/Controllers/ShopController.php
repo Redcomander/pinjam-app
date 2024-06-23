@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 
-class UserController extends Controller
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('shop.create');
     }
 
     /**
@@ -30,7 +30,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        Shop::create([
+            'name_shop' => $request->name_shop,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'kota' => $request->kota,
+            'provinsi' => $request->provinsi,
+            'description' => $request->description,
+            "user_id" => Auth::id(),
+        ]);
+
+
+        // Redirect to the dashboard route upon successful store
+        return redirect()->route('dashboard')->with('success', 'Shop information saved successfully!');
     }
 
     /**
@@ -44,13 +57,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request): View
+    public function edit(string $id)
     {
-        $user = Auth::user();
-
-        return view('profile.edit', [
-            'user' => $user,
-        ]);
+        //
     }
 
     /**
@@ -67,18 +76,5 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    public function changePassword()
-    {
-        return view('profile.new-password');
-    }
-
-    public function becomeSeller(Request $request)
-    {
-        $user = Auth::user();
-        $user->update(['seller' => true]);
-
-        return redirect()->route('shop.create');
     }
 }

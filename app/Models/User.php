@@ -25,6 +25,7 @@ class User extends Authenticatable
         'first_login',
         'avatar',
         'address',
+        'seller',
     ];
 
     /**
@@ -51,4 +52,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Socialite::class);
     }
+
+    public function shops()
+    {
+        return $this->hasMany(Shop::class);
+    }
+    
 }

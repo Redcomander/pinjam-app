@@ -34,7 +34,7 @@ class ProviderController extends Controller
 
         Auth::login($authuser);
 
-        return redirect('/dashboard');
+        return redirect('/');
     }
 
     public function store($socialUser, $provider)

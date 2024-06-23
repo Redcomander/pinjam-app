@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('avatar')->nullable();
             $table->string('password');
+            $table->boolean('seller')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

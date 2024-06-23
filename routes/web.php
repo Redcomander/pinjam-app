@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\FirstLoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Route;
@@ -25,24 +26,30 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
+// Dashboard route
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'seller'])->name('dashboard');
 
+// Profile routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Social login routes
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect'])->name('login.redirect');
 Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback'])->name('login.callback');
 
+// User profile routes
 Route::resource('profil', UserController::class);
-
 Route::get('/changepassword', [UserController::class, 'changePassword'])->name('changepassword');
 
+// Shop routes
+Route::middleware(['auth'])->group(function () {
+    Route::resource('shop', ShopController::class);
+    Route::patch('/become-seller', [UserController::class, 'becomeSeller'])->name('become-seller');
+});
 
 require __DIR__ . '/auth.php';
