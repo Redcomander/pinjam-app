@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ asset('favicon..png') }}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.1/mdb.min.css" rel="stylesheet" />
+    {{-- AOS --}}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
         .back-color {
             background: linear-gradient(to right, #09eb5c, #38d780);
@@ -84,6 +88,20 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
+        }
+
+        .footer {
+            background-color: #f1f1f1;
+            padding: 20px 0;
+        }
+
+        .footer .footer-links a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .footer .footer-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -171,6 +189,18 @@
             @yield('content')
         </div>
     </main>
+
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <div class="footer-links d-flex justify-content-center mb-3">
+                <a href="#" class="me-3">Tentang Kami</a>
+                <a href="#" class="me-3">Kontak</a>
+                <a href="#" class="me-3">Kebijakan Privasi</a>
+                <a href="#">Syarat & Ketentuan</a>
+            </div>
+            <div class="text-muted">&copy; 2024 SipSewa. All rights reserved.</div>
+        </div>
+    </footer>
 
     <!-- MDB script and initialization -->
     <script>

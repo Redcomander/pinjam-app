@@ -17,6 +17,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
+    {{-- Quill --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    
     <style>
         body {
             background-color: #fbfbfb;
@@ -96,7 +101,8 @@
                         aria-current="true">
                         <i class="fas fa-tachometer-alt fa-fw me-2"></i><span>Main Dashboard</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+                    <a href="{{ url('product') }}"
+                        class="list-group-item list-group-item-action py-2 ripple {{ Request::is('product*') ? 'active' : '' }}">
                         <i class="fas fa-file-lines me-2"></i><span>Produk</span>
                     </a>
                     <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
@@ -191,66 +197,6 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            // Initialize Cropper
-            var cropper;
-
-            // Handle the image click event
-            $("#avatar-image").click(function() {
-                // Show the modal
-                $('#cropperModal').modal('show');
-
-                // Set the image source for cropper
-                cropper = new Cropper(document.getElementById('cropperImage'), {
-                    aspectRatio: 1, // Set your desired aspect ratio
-                    viewMode: 1, // Set the view mode to restrict the cropped area to the container
-                });
-            });
-
-            // Handle the modal close event
-            $('#cropperModal').on('hidden.bs.modal', function() {
-                // Destroy the cropper instance when the modal is closed
-                cropper.destroy();
-            });
-
-            // Handle the Save button click in the modal
-            $('#saveCrop').click(function() {
-                // Get the cropped image data
-                var croppedData = cropper.getCroppedCanvas().toDataURL();
-
-                // Update the avatar image
-                $('#avatar-image').attr('src', croppedData);
-
-                // Close the modal
-                $('#cropperModal').modal('hide');
-            });
-        });
-    </script>
-
-    <!-- Cropper Modal -->
-    <div class="modal fade" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cropperModalLabel">Edit Avatar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img id="cropperImage" src="{{ asset('storage/' . Auth::user()->foto_guru) }}" alt="Crop Image"
-                        style="max-width: 100%;">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="saveCrop" type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Cropper Modal -->
 </body>
 
 </html>

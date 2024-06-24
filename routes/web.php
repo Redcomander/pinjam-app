@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\FirstLoginController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
@@ -51,5 +52,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('shop', ShopController::class);
     Route::patch('/become-seller', [UserController::class, 'becomeSeller'])->name('become-seller');
 });
+
+// Product Controller
+Route::resource('product', ProductController::class);
+Route::get('/', [ProductController::class, 'welcome'])->name('welcome');
 
 require __DIR__ . '/auth.php';
