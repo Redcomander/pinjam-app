@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image_thumbnail')->nullable(); // Image Thumbnail
             $table->json('images')->nullable(); // Multiple images
             $table->text('description')->nullable(); // Description
+            $table->string('category');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Related to User
             $table->foreignId('shop_id')->constrained()->onDelete('cascade'); // Related to Shop
             $table->timestamps();

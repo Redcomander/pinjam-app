@@ -149,7 +149,6 @@
                             <button type="submit" class="btn btn-success btn-block w-100">LOG IN</button>
                             <div class="login-options mt-3">
                                 <a href="{{ route('password.request') }}" class="text-success">Lupa Password</a>
-                                <a href="#" class="text-success">Log in dengan no.handphone</a>
                             </div>
                             <hr>
                             <div class="social-login-buttons">

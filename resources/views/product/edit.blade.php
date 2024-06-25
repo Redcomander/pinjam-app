@@ -38,6 +38,20 @@
                             </div>
 
                             <div class="mb-3">
+                                <label for="category" class="form-label">Kategori</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option disabled>-- Pilih Kategory --</option>
+                                    <option selected value="{{ $product->category }}">{{ $product->category }}</option>
+                                    <option value="property">Properti</option>
+                                    <option value="Pakaian">Pakaian</option>
+                                    <option value="Kendaraan">Kendaraan</option>
+                                    <option value="Jasa">Jasa</option>
+                                    <option value="Elektronik">Elektronik</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="description" class="form-label">Deskripsi Produk</label>
                                 <div id="editor" style="height: 300px;">{!! $product->description !!}</div>
                                 <input type="hidden" id="description" name="description">

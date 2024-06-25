@@ -43,6 +43,10 @@
             object-fit: cover;
             width: 100%;
             height: 200px;
+            padding: 10px;
+            /* Add padding */
+            border-radius: 10px;
+            /* Add border-radius for smooth corners */
         }
 
         .category-section {
@@ -185,23 +189,6 @@
                 justify-content: center;
             }
         }
-
-        /* Footer styles */
-        footer {
-            background-color: gray;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
     </style>
 
     <div id="carouselExampleIndicators" class="carousel slide mb-5" data-mdb-ride="carousel" data-mdb-carousel-init>
@@ -259,7 +246,6 @@
                                 class="card-img-top img-fluid img-fit" alt="{{ $product->name }}">
                             <div class="card-body">
                                 <h5 class="card-title text-center">{{ $product->name }}</h5>
-                                <div class="card-text text-center">{!! $product->description !!}</div>
                                 <!-- Render HTML description -->
                                 <div class="price text-center">
                                     @if ($product->price_discount)
@@ -279,7 +265,9 @@
                                     <p>
                                         <b>{{ $product->shop->name_shop }}</b>
                                     </p>
-                                    <a href="#" class="btn btn-success mt-3">Lihat Detail</a>
+                                    <a href="{{ route('product.show', ['product' => $product->id]) }}"
+                                        class="btn btn-success mt-3">Lihat Detail</a>
+
                                 </div>
                             </div>
                         </div>
@@ -314,9 +302,9 @@
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1508873535684-277a3cbcc4e8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                <img src="https://images.unsplash.com/photo-1511350224460-4a95f1cf2e88?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                     alt="Kios">
-                                <div class="overlay">Peralatan</div>
+                                <div class="overlay">Kendaraan</div>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
@@ -335,9 +323,9 @@
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://plus.unsplash.com/premium_photo-1672252617539-878656f17efe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                <img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                     alt="Apartment">
-                                <div class="overlay">Apartment</div>
+                                <div class="overlay">Lainnya</div>
                             </div>
                         </div>
                     </div>

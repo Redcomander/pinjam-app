@@ -18,6 +18,7 @@ class Product extends Model
         'image_thumbnail',
         'images',
         'description',
+        'category',
         'user_id',
         'shop_id',
     ];

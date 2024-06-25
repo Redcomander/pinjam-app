@@ -35,6 +35,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
             'price' => 'required|numeric',
             'available' => 'required|integer',
             'description' => 'required|string',
@@ -70,6 +71,7 @@ class ProductController extends Controller
             'description' => $description,
             'image_thumbnail' => $thumbnailPath,
             'images' => json_encode($imagePaths),
+            'category' => $request->category,
             'user_id' => auth()->id(),
             'shop_id' => $shopId,
         ]);
@@ -82,10 +84,22 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        // Decode images from JSON string to array
+        $images = json_decode($product->images, true); // Ensure it's decoded as an associative array
+
+        // Check if decoding was successful and images is an array
+        if (!is_array($images)) {
+            $images = []; // Set default empty array if decoding fails or returns null
+        }
+
+        return view('product.show', compact('product', 'images'));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -127,6 +141,7 @@ class ProductController extends Controller
         // Update other fields
         $product->name = $request->name;
         $product->price = $request->price;
+        $product->category = $request->category;
         $product->price_discount = $request->price_discount; // Update discount field
         $product->available = $request->available;
         $product->description = new HtmlString($request->description);
@@ -180,5 +195,53 @@ class ProductController extends Controller
         $hotDeals = Product::with('shop')->where('price_discount', '>', 0)->limit(3)->get();
 
         return view('welcome', compact('hotDeals'));
+    }
+
+    public function addToCart(Request $request, $id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            abort(404);
+        }
+
+        $cart = session()->get('cart');
+
+        // If cart is empty, then this is the first item
+        if (!$cart) {
+            $cart = [
+                $id => [
+                    'name' => $product->name,
+                    'quantity' => 1,
+                    'price' => $product->price,
+                ]
+            ];
+            session()->put('cart', $cart);
+
+            return redirect()->back()->with('success', 'Product added to cart successfully!');
+        }
+
+        // If cart not empty, check if this product already exists in cart
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity']++;
+        } else {
+            // If item does not exist in cart, add it with quantity = 1
+            $cart[$id] = [
+                'name' => $product->name,
+                'quantity' => 1,
+                'price' => $product->price,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
+    }
+
+    public function clearCart()
+    {
+        session()->forget('cart');
+
+        return redirect()->back()->with('success', 'Cart cleared successfully!');
     }
 }

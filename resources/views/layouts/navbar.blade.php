@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Your Title Here</title>
     <link rel="icon" href="{{ asset('favicon..png') }}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <!-- Google Fonts -->
@@ -13,8 +14,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.1/mdb.min.css" rel="stylesheet" />
     {{-- AOS --}}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
+        /* Your custom styles here */
         .back-color {
             background: linear-gradient(to right, #09eb5c, #38d780);
         }
@@ -108,6 +109,7 @@
 
 <body>
     <header class="header">
+        <!-- Top bar section -->
         <div class="top-bar back-color py-1">
             <div class="container d-flex justify-content-between">
                 <div class="left-links d-flex flex-wrap">
@@ -127,7 +129,7 @@
                     <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-instagram"></i></a>
                     <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-twitter"></i></a>
                     @auth
-                        <!-- Dropdown section -->
+                        <!-- User dropdown section -->
                         <div class="dropdown">
                             <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
                                 href="#" id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
@@ -160,10 +162,11 @@
                 </div>
             </div>
         </div>
+        <!-- Main bar section -->
         <div class="main-bar back-color py-3">
             <div class="container d-flex align-items-center flex-wrap">
                 <div class="logo me-4">
-                    <img src="logo.png" alt="Shopee" height="40">
+                    <img src="{{ asset('logo.png') }}" alt="" height="40">
                 </div>
                 <div class="search-bar flex-grow-1 my-2 my-md-0">
                     <div class="input-group">
@@ -173,13 +176,34 @@
                 </div>
                 <div class="right-icons ms-sm-0 my-2 my-md-0 d-flex flex-wrap">
                     <a href="#" class="text-white ms-3"><i class="fas fa-bell me-1"></i>Notifikasi</a>
-                    <a href="#" class="text-white ms-3"><i class="fas fa-cart-shopping me-1"></i> Keranjang</a>
+                    <!-- Cart dropdown section -->
+                    <div class="dropdown ms-3">
+                        <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#" id="CardDropdown" role="button" aria-expanded="false">
+                            <i class="fas fa-cart-shopping me-1"></i> Keranjang
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-black"
+                        aria-labelledby="CardDropdown">
+                            @php
+                                $cartItems = session()->get('cart');
+                            @endphp
+                            @if ($cartItems)
+                                @foreach ($cartItems as $cartItem)
+                                    <li><a class="dropdown-item" href="#">{{ $cartItem['name'] }} -
+                                            {{ $cartItem['quantity'] }}</a></li>
+                                @endforeach
+                            @else
+                                <li><a class="dropdown-item" href="#">Keranjang Kosong</a></li>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Navigation links section -->
         <div class="nav-links back-color py-2 fs-6">
             <div class="container mt d-flex justify-content-between flex-wrap">
-
+                <!-- Add your navigation links here if needed -->
             </div>
         </div>
     </header>
