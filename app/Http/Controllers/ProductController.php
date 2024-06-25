@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
@@ -16,8 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $cartItems = CartItem::all();
         $products = Product::where('user_id', auth()->id())->paginate(6); // Paginate with 6 products per page
-        return view('product.index', compact('products'));
+        return view('product.index', compact('products', 'cartItems'));
     }
 
     /**
@@ -192,9 +194,10 @@ class ProductController extends Controller
      */
     public function welcome()
     {
+        $cartItems = CartItem::all();
         $hotDeals = Product::with('shop')->where('price_discount', '>', 0)->limit(3)->get();
 
-        return view('welcome', compact('hotDeals'));
+        return view('welcome', compact('hotDeals', 'cartItems'));
     }
 
     public function addToCart(Request $request, $id)
@@ -205,43 +208,40 @@ class ProductController extends Controller
             abort(404);
         }
 
-        $cart = session()->get('cart');
+        $cartItem = CartItem::where('user_id', auth()->id())->where('product_id', $id)->first();
 
-        // If cart is empty, then this is the first item
-        if (!$cart) {
-            $cart = [
-                $id => [
-                    'name' => $product->name,
-                    'quantity' => 1,
-                    'price' => $product->price,
-                ]
-            ];
-            session()->put('cart', $cart);
-
-            return redirect()->back()->with('success', 'Product added to cart successfully!');
-        }
-
-        // If cart not empty, check if this product already exists in cart
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
+        if ($cartItem) {
+            // Increment the quantity of the existing cart item
+            $cartItem->quantity += $request->quantity;
+            $cartItem->save();
         } else {
-            // If item does not exist in cart, add it with quantity = 1
-            $cart[$id] = [
-                'name' => $product->name,
-                'quantity' => 1,
-                'price' => $product->price,
-            ];
+            // Create a new cart item
+            CartItem::create([
+                'user_id' => auth()->id(),
+                'product_id' => $id,
+                'quantity' => $request->quantity,
+                'duration' => $request->duration,
+                'available' => 1,
+                'image_thumbnail' => $product->image_thumbnail, // Assuming you fetch this from the product model
+            ]);
         }
-
-        session()->put('cart', $cart);
 
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
+
+
     public function clearCart()
     {
-        session()->forget('cart');
+        CartItem::where('user_id', auth()->id())->delete();
 
         return redirect()->back()->with('success', 'Cart cleared successfully!');
+    }
+
+    public function cart()
+    {
+        $cartItems = CartItem::where('user_id', auth()->id())->with('product')->get();
+
+        return view('cart', compact('cartItems'));
     }
 }

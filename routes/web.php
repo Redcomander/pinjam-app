@@ -56,7 +56,13 @@ Route::middleware(['auth'])->group(function () {
 // Product Controller
 Route::resource('product', ProductController::class);
 Route::get('/', [ProductController::class, 'welcome'])->name('welcome');
-Route::get('/add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('addToCart');
-Route::get('/clear-cart', [ProductController::class, 'clearCart'])->name('clearCart');
+// Route for the cart page
+Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
+
+// Route to add items to the cart
+Route::post('/cart/add/{id}', [ProductController::class, 'addToCart'])->name('cart.add');
+
+// Route to clear the cart
+Route::post('/cart/clear', [ProductController::class, 'clearCart'])->name('cart.clear');
 
 require __DIR__ . '/auth.php';

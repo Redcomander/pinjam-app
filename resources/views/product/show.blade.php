@@ -189,70 +189,79 @@
                         @endif
                     </div>
 
-                    <label for="quantity" class="quantity-label">Kuantitas</label>
-                    <input type="number" id="quantity" class="form-control quantity-input" min="1"
-                        max="{{ $product->available }}" value="1">
+                    <form action="{{ route('cart.add', ['id' => $product->id]) }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="quantity" class="quantity-label">Kuantitas</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control quantity-input"
+                                min="1" value="1">
+                        </div>
 
-                    <!-- Duration Input -->
-                    <label for="duration" class="duration-label">Durasi (Hari)</label>
-                    <input type="number" id="duration" class="form-control duration-input" min="1" value="1">
+                        <div class="form-group">
+                            <label for="duration" class="duration-label">Durasi (Hari)</label>
+                            <input type="number" id="duration" name="duration" class="form-control duration-input"
+                                min="1" value="1">
+                        </div>
 
-                    <button class="btn-add-to-cart">Add to Cart</button>
+                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="product-description">
-                    {!! $product->description !!}
+        <div class="container">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="product-description">
+                        {!! $product->description !!}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // JavaScript for carousel functionality
-        document.addEventListener("DOMContentLoaded", function() {
-            let carouselInterval = setInterval(nextSlide, 5000); // Automatically slide every 5 seconds
+        <script>
+            // JavaScript for carousel functionality
+            document.addEventListener("DOMContentLoaded", function() {
+                let carouselInterval = setInterval(nextSlide, 5000); // Automatically slide every 5 seconds
 
-            function nextSlide() {
-                const activeItem = document.querySelector('.carousel-item.active');
-                const nextItem = activeItem.nextElementSibling || document.querySelector(
-                    '.carousel-item:first-child');
-                activeItem.classList.remove('active');
-                nextItem.classList.add('active');
+                function nextSlide() {
+                    const activeItem = document.querySelector('.carousel-item.active');
+                    const nextItem = activeItem.nextElementSibling || document.querySelector(
+                        '.carousel-item:first-child');
+                    activeItem.classList.remove('active');
+                    nextItem.classList.add('active');
 
-                const activeThumbnail = document.querySelector('.carousel-thumbnail.active');
-                const nextThumbnail = activeThumbnail.nextElementSibling || document.querySelector(
-                    '.carousel-thumbnail:first-child');
-                activeThumbnail.classList.remove('active');
-                nextThumbnail.classList.add('active');
+                    const activeThumbnail = document.querySelector('.carousel-thumbnail.active');
+                    const nextThumbnail = activeThumbnail.nextElementSibling || document.querySelector(
+                        '.carousel-thumbnail:first-child');
+                    activeThumbnail.classList.remove('active');
+                    nextThumbnail.classList.add('active');
+                }
+
+                // Pause on hover
+                const carousel = document.getElementById('productCarousel');
+                carousel.addEventListener('mouseenter', function() {
+                    clearInterval(carouselInterval);
+                });
+
+                carousel.addEventListener('mouseleave', function() {
+                    carouselInterval = setInterval(nextSlide, 5000);
+                });
+
+                // Set document title dynamically
+                document.title = '{{ $product->name }}'; // Replace with your Blade variable
+            });
+
+            // Function to handle manual thumbnail click
+            function showImage(index) {
+                const carouselItems = document.querySelectorAll('.carousel-item');
+                const thumbnails = document.querySelectorAll('.carousel-thumbnail');
+
+                carouselItems.forEach(item => item.classList.remove('active'));
+                thumbnails.forEach(thumbnail => thumbnail.classList.remove('active'));
+
+                carouselItems[index].classList.add('active');
+                thumbnails[index].classList.add('active');
             }
-
-            // Pause on hover
-            const carousel = document.getElementById('productCarousel');
-            carousel.addEventListener('mouseenter', function() {
-                clearInterval(carouselInterval);
-            });
-
-            carousel.addEventListener('mouseleave', function() {
-                carouselInterval = setInterval(nextSlide, 5000);
-            });
-
-            // Set document title dynamically
-            document.title = '{{ $product->name }}'; // Replace with your Blade variable
-        });
-
-        // Function to handle manual thumbnail click
-        function showImage(index) {
-            const carouselItems = document.querySelectorAll('.carousel-item');
-            const thumbnails = document.querySelectorAll('.carousel-thumbnail');
-
-            carouselItems.forEach(item => item.classList.remove('active'));
-            thumbnails.forEach(thumbnail => thumbnail.classList.remove('active'));
-
-            carouselItems[index].classList.add('active');
-            thumbnails[index].classList.add('active');
-        }
-    </script>
-@endsection
+        </script>
+    @endsection

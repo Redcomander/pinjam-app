@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Your Title Here</title>
     <link rel="icon" href="{{ asset('favicon..png') }}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <!-- Google Fonts -->
@@ -14,8 +13,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.1/mdb.min.css" rel="stylesheet" />
     {{-- AOS --}}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
-        /* Your custom styles here */
         .back-color {
             background: linear-gradient(to right, #09eb5c, #38d780);
         }
@@ -104,12 +103,83 @@
         .footer .footer-links a:hover {
             text-decoration: underline;
         }
+
+        .dropdown-menu {
+            width: 300px;
+            /* Adjust width as needed */
+            padding: 0;
+            /* Remove default padding */
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dropdown-item img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .dropdown-item div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group-sm .btn {
+            padding: 5px 10px;
+        }
+
+        .input-group-sm .form-control {
+            text-align: center;
+            width: 50px;
+        }
+
+        .dropdown-footer {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .w-100 {
+            width: 50%;
+        }
+
+        .cart-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+        }
+
+        .cart-item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            /* Ensures the image covers the entire area */
+            margin-right: 10px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+            /* Takes up remaining space */
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            /* Adjust as needed */
+        }
+
+        .quantity-input {
+            text-align: center;
+            max-width: 40px;
+        }
     </style>
 </head>
 
 <body>
     <header class="header">
-        <!-- Top bar section -->
         <div class="top-bar back-color py-1">
             <div class="container d-flex justify-content-between">
                 <div class="left-links d-flex flex-wrap">
@@ -129,7 +199,7 @@
                     <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-instagram"></i></a>
                     <a href="#" class="text-white me-2 d-none d-sm-flex"><i class="fab fa-twitter"></i></a>
                     @auth
-                        <!-- User dropdown section -->
+                        <!-- Dropdown section -->
                         <div class="dropdown">
                             <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
                                 href="#" id="navbarDropdownMenuAvatar" role="button" aria-expanded="false">
@@ -162,7 +232,6 @@
                 </div>
             </div>
         </div>
-        <!-- Main bar section -->
         <div class="main-bar back-color py-3">
             <div class="container d-flex align-items-center flex-wrap">
                 <div class="logo me-4">
@@ -176,34 +245,50 @@
                 </div>
                 <div class="right-icons ms-sm-0 my-2 my-md-0 d-flex flex-wrap">
                     <a href="#" class="text-white ms-3"><i class="fas fa-bell me-1"></i>Notifikasi</a>
-                    <!-- Cart dropdown section -->
                     <div class="dropdown ms-3">
-                        <a data-mdb-dropdown-init class="dropdown-toggle d-flex align-items-center hidden-arrow"
-                        href="#" id="CardDropdown" role="button" aria-expanded="false">
+                        <a data-mdb-dropdown-init href="#" class="text-white" id="cartDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cart-shopping me-1"></i> Keranjang
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end text-black"
-                        aria-labelledby="CardDropdown">
-                            @php
-                                $cartItems = session()->get('cart');
-                            @endphp
-                            @if ($cartItems)
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
+                            <!-- Check if cart items exist -->
+                            @if ($cartItems->isNotEmpty())
                                 @foreach ($cartItems as $cartItem)
-                                    <li><a class="dropdown-item" href="#">{{ $cartItem['name'] }} -
-                                            {{ $cartItem['quantity'] }}</a></li>
+                                    <li class="cart-dropdown-item">
+                                        <img src="{{ asset('storage/' . $cartItem->product->image_thumbnail) }}"
+                                            alt="{{ $cartItem->product->name }}" class="cart-item-image">
+                                        <div class="cart-item-details">
+                                            <div>{{ $cartItem->product->name }}</div>
+                                            <small class="text-muted">Quantity: {{ $cartItem->quantity }}</small>
+                                        </div>
+                                        <div class="cart-item-actions">
+                                            <button class="btn btn-outline-danger btn-sm">-</button>
+                                            <input type="text" class="form-control form-control-sm quantity-input"
+                                                value="{{ $cartItem->quantity }}" readonly>
+                                            <button class="btn btn-outline-danger btn-sm">+</button>
+                                        </div>
+                                    </li>
                                 @endforeach
+                                <li class="dropdown-divider"></li>
+                                <li class="dropdown-item text-center">
+                                    <button class="btn btn-danger btn-sm">View Cart</button>
+                                    <form action="{{ route('cart.clear') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-danger btn-sm mt-2">Clear
+                                            Cart</button>
+                                    </form>
+                                </li>
                             @else
-                                <li><a class="dropdown-item" href="#">Keranjang Kosong</a></li>
+                                <li><a class="dropdown-item text-black text-center">Keranjang Kosong</a></li>
                             @endif
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Navigation links section -->
         <div class="nav-links back-color py-2 fs-6">
             <div class="container mt d-flex justify-content-between flex-wrap">
-                <!-- Add your navigation links here if needed -->
+
             </div>
         </div>
     </header>
