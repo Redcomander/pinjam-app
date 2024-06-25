@@ -194,7 +194,7 @@
                         <div class="form-group">
                             <label for="quantity" class="quantity-label">Kuantitas</label>
                             <input type="number" id="quantity" name="quantity" class="form-control quantity-input"
-                                min="1" value="1">
+                                min="1" max="{{ $product->available }}" value="1">
                         </div>
 
                         <div class="form-group">

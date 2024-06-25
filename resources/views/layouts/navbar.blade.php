@@ -104,8 +104,8 @@
             text-decoration: underline;
         }
 
-        .dropdown-menu {
-            width: 300px;
+        .dropdown-menu-cart {
+            width: 530px;
             /* Adjust width as needed */
             padding: 0;
             /* Remove default padding */
@@ -250,7 +250,7 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cart-shopping me-1"></i> Keranjang
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
+                        <ul class="dropdown-menu dropdown-menu-cart dropdown-menu-end" aria-labelledby="cartDropdown">
                             <!-- Check if cart items exist -->
                             @if ($cartItems->isNotEmpty())
                                 @foreach ($cartItems as $cartItem)
@@ -262,11 +262,21 @@
                                             <small class="text-muted">Quantity: {{ $cartItem->quantity }}</small>
                                         </div>
                                         <div class="cart-item-actions">
-                                            <button class="btn btn-outline-danger btn-sm">-</button>
-                                            <input type="text" class="form-control form-control-sm quantity-input"
-                                                value="{{ $cartItem->quantity }}" readonly>
-                                            <button class="btn btn-outline-danger btn-sm">+</button>
+                                            @php
+                                                $price = $cartItem->product->price;
+                                                $discountedPrice = $cartItem->product->price_discount;
+                                                $quantity = $cartItem->quantity;
+                                                $duration = $cartItem->duration; // Assuming duration is available on $cartItem
+
+                                                // Calculate total price based on quantity and duration
+                                                $totalPrice = ($discountedPrice ? $discountedPrice : $price) * $quantity * $duration;
+                                            @endphp
+
+                                            <span class="text-success">
+                                                Total Price ({{ $quantity }} items x {{ $duration }} days): {{ 'Rp ' . number_format($totalPrice, 0, ',', '.') }}
+                                            </span>
                                         </div>
+
                                     </li>
                                 @endforeach
                                 <li class="dropdown-divider"></li>
