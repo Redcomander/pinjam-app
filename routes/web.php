@@ -65,4 +65,7 @@ Route::post('/cart/add/{id}', [ProductController::class, 'addToCart'])->name('ca
 // Route to clear the cart
 Route::post('/cart/clear', [ProductController::class, 'clearCart'])->name('cart.clear');
 
+// Remove item from the cart
+Route::delete('/cart/{id}', [ProductController::class, 'removeFromCart'])->name('cart.remove');
+
 require __DIR__ . '/auth.php';

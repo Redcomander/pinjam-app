@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Nette\Utils\Html;
 
@@ -236,6 +237,17 @@ class ProductController extends Controller
         CartItem::where('user_id', auth()->id())->delete();
 
         return redirect()->back()->with('success', 'Cart cleared successfully!');
+    }
+
+    public function removeFromCart($id)
+    {
+        $cartItem = CartItem::find($id);
+
+        if ($cartItem && $cartItem->user_id == Auth::id()) {
+            $cartItem->delete();
+        }
+
+        return redirect()->route('cart.show')->with('success', 'Item removed from cart.');
     }
 
     public function cart()

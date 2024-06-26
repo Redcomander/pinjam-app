@@ -15,6 +15,16 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+        }
+
         .back-color {
             background: linear-gradient(to right, #09eb5c, #38d780);
         }
@@ -252,45 +262,56 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-cart dropdown-menu-end" aria-labelledby="cartDropdown">
                             <!-- Check if cart items exist -->
-                            @if ($cartItems->isNotEmpty())
-                                @foreach ($cartItems as $cartItem)
-                                    <li class="cart-dropdown-item">
-                                        <img src="{{ asset('storage/' . $cartItem->product->image_thumbnail) }}"
-                                            alt="{{ $cartItem->product->name }}" class="cart-item-image">
-                                        <div class="cart-item-details">
-                                            <div>{{ $cartItem->product->name }}</div>
-                                            <small class="text-muted">Quantity: {{ $cartItem->quantity }}</small>
-                                        </div>
-                                        <div class="cart-item-actions">
-                                            @php
-                                                $price = $cartItem->product->price;
-                                                $discountedPrice = $cartItem->product->price_discount;
-                                                $quantity = $cartItem->quantity;
-                                                $duration = $cartItem->duration; // Assuming duration is available on $cartItem
+                            @auth
 
-                                                // Calculate total price based on quantity and duration
-                                                $totalPrice = ($discountedPrice ? $discountedPrice : $price) * $quantity * $duration;
-                                            @endphp
 
-                                            <span class="text-success">
-                                                Total Price ({{ $quantity }} items x {{ $duration }} days): {{ 'Rp ' . number_format($totalPrice, 0, ',', '.') }}
-                                            </span>
-                                        </div>
+                                @if ($cartItems->isNotEmpty())
+                                    @foreach ($cartItems as $cartItem)
+                                        <li class="cart-dropdown-item">
+                                            <img src="{{ asset('storage/' . $cartItem->product->image_thumbnail) }}"
+                                                alt="{{ $cartItem->product->name }}" class="cart-item-image">
+                                            <div class="cart-item-details">
+                                                <div>{{ $cartItem->product->name }}</div>
+                                                <small class="text-muted">Quantity: {{ $cartItem->quantity }}</small>
+                                            </div>
+                                            <div class="cart-item-actions">
+                                                @php
+                                                    $price = $cartItem->product->price;
+                                                    $discountedPrice = $cartItem->product->price_discount;
+                                                    $quantity = $cartItem->quantity;
+                                                    $duration = $cartItem->duration; // Assuming duration is available on $cartItem
 
+                                                    // Calculate total price based on quantity and duration
+                                                    $totalPrice =
+                                                        ($discountedPrice ? $discountedPrice : $price) *
+                                                        $quantity *
+                                                        $duration;
+                                                @endphp
+
+                                                <span class="text-success">
+                                                    Total Price ({{ $quantity }} items x {{ $duration }} days):
+                                                    {{ 'Rp ' . number_format($totalPrice, 0, ',', '.') }}
+                                                </span>
+                                            </div>
+
+                                        </li>
+                                    @endforeach
+                                    <li class="dropdown-divider"></li>
+                                    <li class="dropdown-item text-center">
+                                        <a href="{{ route('cart') }}" class="btn btn-danger btn-sm">View Cart</a>
+                                        <form action="{{ route('cart.clear') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-outline-danger btn-sm mt-2">Clear
+                                                Cart</button>
+                                        </form>
                                     </li>
-                                @endforeach
-                                <li class="dropdown-divider"></li>
-                                <li class="dropdown-item text-center">
-                                    <button class="btn btn-danger btn-sm">View Cart</button>
-                                    <form action="{{ route('cart.clear') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-outline-danger btn-sm mt-2">Clear
-                                            Cart</button>
-                                    </form>
-                                </li>
-                            @else
+                                @else
+                                    <li><a class="dropdown-item text-black text-center">Keranjang Kosong</a></li>
+                                @endif
+                            @endauth
+                            @guest
                                 <li><a class="dropdown-item text-black text-center">Keranjang Kosong</a></li>
-                            @endif
+                            @endguest
                         </ul>
                     </div>
                 </div>
@@ -303,7 +324,7 @@
         </div>
     </header>
 
-    <main class="mt-5">
+    <main class="content mt-5">
         <div class="container pt-4">
             @yield('content')
         </div>
