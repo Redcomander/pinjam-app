@@ -56,16 +56,29 @@ Route::middleware(['auth'])->group(function () {
 // Product Controller
 Route::resource('product', ProductController::class);
 Route::get('/', [ProductController::class, 'welcome'])->name('welcome');
+
 // Route for the cart page
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
 
 // Route to add items to the cart
-Route::post('/cart/add/{id}', [ProductController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/add/{id}', [ProductController::class, 'addToCart'])->middleware(['auth'])->name('cart.add');
 
 // Route to clear the cart
 Route::post('/cart/clear', [ProductController::class, 'clearCart'])->name('cart.clear');
 
 // Remove item from the cart
 Route::delete('/cart/{id}', [ProductController::class, 'removeFromCart'])->name('cart.remove');
+
+// Category Show Product
+Route::get('/category/{category}', [ProductController::class, 'showCategoryProducts'])->name('product.category');
+
+// Search Product
+Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
+
+// Checkout Product
+Route::get('/checkout', [ProductController::class, 'checkout'])->name('checkout');
+Route::post('/midtrans/callback', [ProductController::class, 'callback'])->name('midtrans.callback');
+Route::get('/checkout/complete/{orderId}', [ProductController::class, 'complete'])->name('checkout.complete');
+
 
 require __DIR__ . '/auth.php';

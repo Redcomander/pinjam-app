@@ -245,13 +245,17 @@
         <div class="main-bar back-color py-3">
             <div class="container d-flex align-items-center flex-wrap">
                 <div class="logo me-4">
-                    <img src="{{ asset('logo.png') }}" alt="" height="40">
+                    <a href="/">
+                        <img src="{{ asset('logo.png') }}" alt="" height="40">
+                    </a>
                 </div>
                 <div class="search-bar flex-grow-1 my-2 my-md-0">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cari Produk disini">
-                        <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
-                    </div>
+                    <form action="{{ route('products.search') }}" method="GET" class="d-flex">
+                        <div class="input-group">
+                            <input type="search" name="query" class="form-control" placeholder="Cari Produk disini">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
                 </div>
                 <div class="right-icons ms-sm-0 my-2 my-md-0 d-flex flex-wrap">
                     <a href="#" class="text-white ms-3"><i class="fas fa-bell me-1"></i>Notifikasi</a>

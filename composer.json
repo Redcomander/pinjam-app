@@ -13,7 +13,8 @@
         "laravel/socialite": "*",
         "laravel/telescope": "*",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "*"
+        "livewire/livewire": "*",
+        "midtrans/midtrans-php": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

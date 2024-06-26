@@ -14,6 +14,8 @@ class Order extends Model
         'shop_id',
         'total_price',
         'duration',
+        'status',
+        'snap_token',
     ];
 
     public function user()

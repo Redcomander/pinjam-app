@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Midtrans\Config;
+use Midtrans\Snap;
 use Nette\Utils\Html;
 
 class ProductController extends Controller
@@ -255,5 +258,156 @@ class ProductController extends Controller
         $cartItems = CartItem::where('user_id', auth()->id())->with('product')->get();
 
         return view('cart', compact('cartItems'));
+    }
+
+    public function showCategoryProducts($category)
+    {
+        $fixedCategories = ['Property', 'Pakaian', 'Kendaraan', 'Jasa', 'Elektronik', 'Lainnya'];
+
+        // Validate if the category exists in the fixed categories
+        if (!in_array($category, $fixedCategories)) {
+            return redirect()->route('welcome')->with('error', 'Category not found.');
+        }
+
+        $products = Product::where('category', $category)->paginate(6); // Paginate with 6 products per page
+        $cartItems = CartItem::all();
+
+        return view('product.category', compact('products', 'category', 'cartItems'));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (empty($query)) {
+            return redirect()->route('/')->with('error', 'Please enter a search term.');
+        }
+
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->paginate(6);
+
+        return view('product.search', compact('products', 'query'));
+    }
+
+    public function checkout()
+    {
+        // Retrieve cart items for the current user
+        $cartItems = CartItem::where('user_id', auth()->id())->with('product')->get();
+
+        // Calculate total amount to be paid
+        $grandTotal = 0;
+        foreach ($cartItems as $cartItem) {
+            $price = $cartItem->product->price;
+            $discountedPrice = $cartItem->product->price_discount ?: $price; // Use discounted price if available
+            $quantity = $cartItem->quantity;
+            $duration = $cartItem->duration;
+
+            // Calculate total price based on quantity
+            $totalPrice = $discountedPrice * $quantity;
+            $grandTotal += $totalPrice;
+        }
+
+        // Assuming you have a shop_id in your product table or similar logic to determine it
+        $shopId = $cartItems->first()->product->shop_id;
+
+        // Create order and store necessary details
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'shop_id' => $shopId,
+            'total_price' => $grandTotal,
+            'duration' => $duration,
+            // Add more fields as needed for your Order model
+        ]);
+
+        // Initialize Midtrans configuration
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized = config('services.midtrans.is_sanitized');
+        Config::$is3ds = config('services.midtrans.is_3ds');
+
+        // Prepare customer details
+        $customerDetails = [
+            'first_name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            // Add more details as needed
+        ];
+
+        // Prepare items for Midtrans
+        $items = [];
+        foreach ($cartItems as $cartItem) {
+            $items[] = [
+                'id' => $cartItem->id,
+                'price' => $cartItem->product->price,
+                'quantity' => $cartItem->quantity,
+                'name' => $cartItem->product->name,
+            ];
+        }
+
+        // Prepare transaction details
+        $transactionDetails = [
+            'order_id' => $order->id,
+            'gross_amount' => $grandTotal,
+        ];
+
+        // Prepare credit card secure options (optional)
+        $creditCardOptions = [
+            'secure' => true,
+        ];
+
+        // Prepare enabled payments (optional)
+        $enabledPayments = ['credit_card', 'gopay'];
+
+        // Create Snap Token
+        $snapToken = Snap::getSnapToken([
+            'transaction_details' => $transactionDetails,
+            'customer_details' => $customerDetails,
+            'item_details' => $items,
+            'credit_card' => $creditCardOptions,
+            'enabled_payments' => $enabledPayments,
+        ]);
+
+        // Assign Snap Token to order
+        $order->snap_token = $snapToken;
+
+        // Save the order with Snap Token
+        $order->save();
+
+        // Redirect to checkout view with Snap Token and order
+        return view('checkout', compact('snapToken', 'order'));
+    }
+
+
+    public function callback(Request $request)
+    {
+        $transaction = $request->input('transaction_status');
+        $orderId = $request->input('order_id');
+
+        // Update your order status based on transaction status
+        $order = Order::find($orderId);
+        if ($order) {
+            if ($transaction == 'capture') {
+                $order->status = 'success'; // Set your success status
+            } elseif ($transaction == 'deny' || $transaction == 'cancel') {
+                $order->status = 'failed'; // Set your failed status
+            }
+            $order->save();
+        }
+
+        return redirect()->route('checkout.complete', $orderId);
+    }
+
+    /**
+     * Display order completion page.
+     */
+    public function complete($orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order) {
+            abort(404);
+        }
+
+        // Fetch additional details as needed
+
+        return view('checkout_complete', compact('order'));
     }
 }

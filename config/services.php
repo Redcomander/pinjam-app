@@ -48,4 +48,12 @@ return [
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
+
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false), // default to sandbox environment
+        'is_sanitized' => true,
+        'is_3ds' => true,
+    ],
+
 ];

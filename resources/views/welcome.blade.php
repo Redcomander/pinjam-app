@@ -288,44 +288,56 @@
                     <div class="row">
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://plus.unsplash.com/premium_photo-1687960117069-567a456fe5f3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Property">
-                                <div class="overlay">Property</div>
+                                <a href="{{ route('product.category', ['category' => 'Property']) }}">
+                                    <img src="https://plus.unsplash.com/premium_photo-1687960117069-567a456fe5f3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Property">
+                                    <div class="overlay">Property</div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Pakaian">
-                                <div class="overlay">Pakaian</div>
+                                <a href="{{ route('product.category', ['category' => 'Pakaian']) }}">
+                                    <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Pakaian">
+                                    <div class="overlay">Pakaian</div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1511350224460-4a95f1cf2e88?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Kios">
-                                <div class="overlay">Kendaraan</div>
+                                <a href="{{ route('product.category', ['category' => 'Kendaraan']) }}">
+                                    <img src="https://images.unsplash.com/photo-1511350224460-4a95f1cf2e88?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Kendaraan">
+                                    <div class="overlay">Kendaraan</div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1602910344008-22f323cc1817?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Jasa">
-                                <div class="overlay">Jasa</div>
+                                <a href="{{ route('product.category', ['category' => 'Jasa']) }}">
+                                    <img src="https://images.unsplash.com/photo-1602910344008-22f323cc1817?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Jasa">
+                                    <div class="overlay">Jasa</div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Apartment">
-                                <div class="overlay">Elektronik</div>
+                                <a href="{{ route('product.category', ['category' => 'Elektronik']) }}">
+                                    <img src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Elektronik">
+                                    <div class="overlay">Elektronik</div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
                             <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Apartment">
-                                <div class="overlay">Lainnya</div>
+                                <a href="{{ route('product.category', ['category' => 'Lainnya']) }}">
+                                    <img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Lainnya">
+                                    <div class="overlay">Lainnya</div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -333,6 +345,7 @@
             </div>
         </div>
     </section>
+
 
     <script>
         // Initialization for ES Users
