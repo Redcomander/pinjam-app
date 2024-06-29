@@ -27,4 +27,7 @@ class RedirectIfAuthenticated
 
         return $next($request);
     }
+    protected $except = [
+        'https://05bf-180-244-132-87.ngrok-free.app/',
+    ];
 }

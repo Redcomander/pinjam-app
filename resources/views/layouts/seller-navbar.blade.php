@@ -16,6 +16,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    @livewireStyles
 
     {{-- Quill --}}
 
@@ -105,7 +106,7 @@
                         class="list-group-item list-group-item-action py-2 ripple {{ Request::is('product*') ? 'active' : '' }}">
                         <i class="fas fa-file-lines me-2"></i><span>Produk</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
+                    <a href="{{ route('order.index') }}" class="list-group-item list-group-item-action py-2 ripple {{ Request::is('order*') ? 'active' : '' }}"><i
                             class="fas fa-user me-2"></i><span>Pesanan</span></a>
                 </div>
         </nav>
@@ -196,6 +197,7 @@
             Ripple
         });
     </script>
+    @livewireScripts
 
 </body>
 

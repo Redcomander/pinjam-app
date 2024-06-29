@@ -14,7 +14,8 @@
         "laravel/telescope": "*",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "*",
-        "midtrans/midtrans-php": "*"
+        "midtrans/midtrans-php": "*",
+        "pusher/pusher-php-server": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

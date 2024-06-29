@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -250,7 +251,7 @@ class ProductController extends Controller
             $cartItem->delete();
         }
 
-        return redirect()->route('cart.show')->with('success', 'Item removed from cart.');
+        return redirect()->route('cart')->with('success', 'Item removed from cart.');
     }
 
     public function cart()
@@ -294,6 +295,10 @@ class ProductController extends Controller
         // Retrieve cart items for the current user
         $cartItems = CartItem::where('user_id', auth()->id())->with('product')->get();
 
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
         // Calculate total amount to be paid
         $grandTotal = 0;
         foreach ($cartItems as $cartItem) {
@@ -302,8 +307,8 @@ class ProductController extends Controller
             $quantity = $cartItem->quantity;
             $duration = $cartItem->duration;
 
-            // Calculate total price based on quantity
-            $totalPrice = $discountedPrice * $quantity;
+            // Calculate total price based on quantity and duration
+            $totalPrice = $discountedPrice * $quantity * $duration;
             $grandTotal += $totalPrice;
         }
 
@@ -335,17 +340,23 @@ class ProductController extends Controller
         // Prepare items for Midtrans
         $items = [];
         foreach ($cartItems as $cartItem) {
+            $discountedPrice = $cartItem->product->price_discount ?: $cartItem->product->price;
+            $totalPrice = $discountedPrice * $cartItem->quantity * $cartItem->duration;
             $items[] = [
                 'id' => $cartItem->id,
-                'price' => $cartItem->product->price,
+                'price' => $totalPrice / $cartItem->quantity, // unit price for Midtrans
                 'quantity' => $cartItem->quantity,
                 'name' => $cartItem->product->name,
             ];
         }
 
         // Prepare transaction details
+        // Generate a random order ID
+        $order_id = uniqid();
+
+        // Construct transaction details
         $transactionDetails = [
-            'order_id' => $order->id,
+            'order_id' => $order_id,
             'gross_amount' => $grandTotal,
         ];
 
@@ -372,41 +383,58 @@ class ProductController extends Controller
         // Save the order with Snap Token
         $order->save();
 
-        // Redirect to checkout view with Snap Token and order
-        return view('checkout', compact('snapToken', 'order'));
+        // Redirect to checkout view with Snap Token, order, and cartItems
+        return view('checkout', compact('snapToken', 'order', 'cartItems'));
     }
+
 
 
     public function callback(Request $request)
     {
+
+        $serverKey = config('services.midtrans.server_key');
+        $data = $request->all();
+        $signatureKey = hash('sha512', $data['order_id'] . $data['status_code'] . $data['gross_amount'] . $serverKey);
+
+        if ($signatureKey !== $data['signature_key']) {
+            Log::error('Invalid signature key', ['order_id' => $data['order_id']]);
+            return response()->json(['message' => 'Invalid signature key'], 400);
+        }
+
         $transaction = $request->input('transaction_status');
         $orderId = $request->input('order_id');
 
         // Update your order status based on transaction status
         $order = Order::find($orderId);
         if ($order) {
-            if ($transaction == 'capture') {
+            if ($transaction == 'capture' || $transaction == 'settlement') {
                 $order->status = 'success'; // Set your success status
-            } elseif ($transaction == 'deny' || $transaction == 'cancel') {
+
+                // Clear cart after successful transaction
+                CartItem::where('user_id', auth()->id())->delete();
+            } elseif ($transaction == 'deny' || $transaction == 'cancel' || $transaction == 'expire') {
                 $order->status = 'failed'; // Set your failed status
             }
             $order->save();
         }
 
-        return redirect()->route('checkout.complete', $orderId);
+        return redirect()->route('checkout_complete', $orderId);
     }
 
     /**
      * Display order completion page.
      */
-    public function complete($orderId)
+    public function checkoutComplete($orderId)
     {
         $order = Order::find($orderId);
         if (!$order) {
-            abort(404);
+            return redirect()->route('home')->with('error', 'Order not found.');
         }
 
-        // Fetch additional details as needed
+        CartItem::where('user_id', $order->user_id)->delete();
+        $order->status = 'success';
+        $order->progress = 'Menunggu Konfirmasi';
+        $order->save();
 
         return view('checkout_complete', compact('order'));
     }

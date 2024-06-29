@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Auth\ProviderController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FirstLoginController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
+use App\Livewire\ChatComponent;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -77,8 +80,18 @@ Route::get('/products/search', [ProductController::class, 'search'])->name('prod
 
 // Checkout Product
 Route::get('/checkout', [ProductController::class, 'checkout'])->name('checkout');
-Route::post('/midtrans/callback', [ProductController::class, 'callback'])->name('midtrans.callback');
-Route::get('/checkout/complete/{orderId}', [ProductController::class, 'complete'])->name('checkout.complete');
+Route::post('/midtrans/callback', [ProductController::class, 'callback']);
+Route::get('/checkout-complete/{orderId}', [ProductController::class, 'checkoutComplete'])->name('checkout_complete');
 
+// Order Controller
+Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+Route::get('/orders/customer', [OrderController::class, 'customer'])->name('order.customer');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+
+// Chat Route
+Route::get('/chat', [ChatController::class, 'index'])->middleware('auth')->name('chat.index');
+Route::get('/chat/with-owner/{order}', [ChatController::class, 'chatWithOwner'])->name('chat.withOwner')->middleware('auth');
+Route::post('/chat/send', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage');
+Route::get('/chat/load-messages', [ChatController::class, 'loadMessages'])->middleware('auth')->name('chat.loadMessages');
 
 require __DIR__ . '/auth.php';

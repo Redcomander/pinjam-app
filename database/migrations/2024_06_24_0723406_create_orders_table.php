@@ -18,6 +18,8 @@ return new class extends Migration
             $table->decimal('total_price', 8, 2); // Total price of the order
             $table->string('status')->default('pending'); // Status of the order
             $table->integer('duration'); // Duration of the order in days
+            $table->string('snap_token')->nullable(); // Status of the order
+            $table->string('progress')->nullable(); // Progress of the order (nullable)
             $table->timestamps();
         });
     }
