@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shop;
+use App\Notifications\ProductCheckedOut;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -205,6 +206,39 @@ class ProductController extends Controller
         return view('welcome', compact('hotDeals', 'cartItems'));
     }
 
+    public function dashboard()
+    {
+        $totalProduct = Product::count();
+        $productSedangDisewa = Order::where('progress', 'Sedang Disewa')->count();
+        $pendapatan = Order::where('progress', 'Pesanan Selesai')->sum('total_price');
+
+        // Monthly revenue data
+        $monthlyRevenue = Order::where('progress', 'Pesanan Selesai')
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_price) as total')
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get()
+            ->groupBy('year');
+
+        // Format the data for the chart
+        $formattedRevenue = [];
+        foreach ($monthlyRevenue as $year => $months) {
+            foreach ($months as $monthData) {
+                $formattedRevenue[] = [
+                    'year' => $year,
+                    'month' => $monthData->month,
+                    'total' => $monthData->total,
+                ];
+            }
+        }
+
+        return view('dashboard', compact('totalProduct', 'productSedangDisewa', 'pendapatan', 'formattedRevenue'));
+    }
+
+
+
+
     public function addToCart(Request $request, $id)
     {
         $product = Product::find($id);
@@ -323,6 +357,14 @@ class ProductController extends Controller
             'duration' => $duration,
             // Add more fields as needed for your Order model
         ]);
+
+        $shop = Shop::find($shopId);
+        if ($shop) {
+            $shopOwner = $shop->user; // Assuming you have a relationship to the shop owner
+            if ($shopOwner) {
+                $shopOwner->notify(new ProductCheckedOut($order));
+            }
+        }
 
         // Initialize Midtrans configuration
         Config::$serverKey = config('services.midtrans.server_key');

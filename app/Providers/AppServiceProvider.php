@@ -27,10 +27,15 @@ class AppServiceProvider extends ServiceProvider
         if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&  $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
             \URL::forceScheme('https');
         }
-        // Share cart items data with layouts.navbar view
+        // Share cart items and notifications data with layouts.navbar view
         View::composer('layouts.navbar', function ($view) {
-            $cartItems = CartItem::where('user_id', Auth::id())->with('product')->get();
-            $view->with('cartItems', $cartItems);
+            $user = Auth::user();
+            $cartItems = $user ? CartItem::where('user_id', $user->id)->with('product')->get() : collect();
+            $notifications = $user ? $user->unreadNotifications : collect();
+            $view->with([
+                'cartItems' => $cartItems,
+                'notifications' => $notifications,
+            ]);
         });
     }
 }

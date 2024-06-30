@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FirstLoginController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -31,9 +32,8 @@ Route::get('/', function () {
 });
 
 // Dashboard route
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'seller'])->name('dashboard');
+Route::get('/dashboard', [ProductController::class, 'dashboard'])->middleware(['auth', 'verified', 'seller'])->name('dashboard');
+
 
 // Profile routes
 Route::middleware('auth')->group(function () {
@@ -86,12 +86,20 @@ Route::get('/checkout-complete/{orderId}', [ProductController::class, 'checkoutC
 // Order Controller
 Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
 Route::get('/orders/customer', [OrderController::class, 'customer'])->name('order.customer');
-Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/orders/customer/{id}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/orders/{id}', [OrderController::class, 'showForOwner'])->name('order.show-owner');
+Route::post('/order/confirm/{id}', [OrderController::class, 'confirm'])->name('order.confirm');
+Route::post('/order/complete/{id}', [OrderController::class, 'complete'])->name('order.complete');
 
 // Chat Route
 Route::get('/chat', [ChatController::class, 'index'])->middleware('auth')->name('chat.index');
 Route::get('/chat/with-owner/{order}', [ChatController::class, 'chatWithOwner'])->name('chat.withOwner')->middleware('auth');
 Route::post('/chat/send', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage');
 Route::get('/chat/load-messages', [ChatController::class, 'loadMessages'])->middleware('auth')->name('chat.loadMessages');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+});
 
 require __DIR__ . '/auth.php';
