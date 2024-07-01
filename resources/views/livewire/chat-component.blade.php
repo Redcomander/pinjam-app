@@ -1,5 +1,5 @@
 <div>
-    <div id="chat-messages" class="chat-container" wire:poll.200ms="refreshMessages">
+    <div id="chat-messages" class="chat-container mb-5" wire:poll.200ms="refreshMessages">
         @foreach ($messages as $message)
             <div class="chat-bubble {{ $message->user_id === Auth::id() ? 'user' : 'other' }} mb-3">
                 <div><strong>{{ $message->user->name }}</strong></div>

@@ -353,7 +353,7 @@
         </div>
     </main>
 
-    <footer class="footer text-center text-lg-start text-muted ">
+    <footer class="footer text-center text-lg-start text-muted mt-5">
         <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
             <div class="me-5 d-none d-lg-block text-white">
                 <span>Get connected with us on social networks:</span>
@@ -422,7 +422,7 @@
                         </p>
                     </div>
                     <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                        
+
                     </div>
                     <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                         <h6 class="text-uppercase fw-bold mb-4">

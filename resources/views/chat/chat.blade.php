@@ -8,7 +8,7 @@
         }
     </style>
     <title>Chat</title>
-    <div class="container">
+    <div class="container ">
         <h2>Chat</h2>
         <livewire:chat-form :chatId="$chatId" />
     </div>

@@ -3,7 +3,7 @@
 <title>Cart</title>
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <h2>Your Cart</h2>
         @if ($cartItems->isEmpty())
             <p>Your cart is empty.</p>
